@@ -32,15 +32,16 @@ To build an override package:
 
 To install the overrides in a customer cluster:
 
-1. Give the customer a copy of `override.sh` from this repo and have
-   them run it (from a host with a `KUBECONFIG` that has cluster-admin
-   credentials in their cluster). The syntax is
+1. Give the customer a copy of `override.sh` from this repo
+   (https://raw.githubusercontent.com/danwinship/sidedoor/master/override.sh)
+   and have them run it (from a host with a `KUBECONFIG` that has
+   cluster-admin credentials in their cluster). The syntax is
 
-     ./override.sh <install|uninstall> [--workers-only] OVERRIDE-IMAGE
+       ./override.sh <install|uninstall> [--workers-only] OVERRIDE-IMAGE
 
    eg:
 
-     ./override.sh install quay.io/danwinship/overrides:bz12345
+       ./override.sh install quay.io/danwinship/overrides:bz12345
 
    This will deploy a DaemonSet to their cluster using the indicated
    image which will run `rpm-ostree override` to install (or
