@@ -5,11 +5,8 @@ finalizes.
 Setup:
 
 1. If you do not already have a quay.io account, create one
-
 2. On quay.io, create a new repo named "overrides"
-
-3. Check out this repo
-
+3. Check out the sidedoor repo
 4. `echo REPO=quay.io/${QUAY_USERNAME}/overrides > config.sh`
 
 
@@ -49,8 +46,11 @@ To install the overrides in a customer cluster:
    `--workers-only`, it will only deploy the changes to the worker
    nodes, not the masters.) Once the rpm-ostree changes are staged on
    every node, it will write out a dummy MachineConfig object to force
-   the nodes to reboot into the updated ostree image, and wait for the
-   nodes to reboot.
+   MCO to drain and reboot the nodes one by one, to get them running the
+   updated ostree image. The script will wait for the nodes to reboot.
+   If updating both workers and masters it will do all of the workers
+   first, and then the masters (because this requires two separate
+   MachineConfigs).
 
 2. To uninstall the overrides later, they can use `./override.sh
    uninstall`. For now, they have to pass the same arguments when
