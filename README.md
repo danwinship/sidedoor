@@ -2,12 +2,40 @@ Hack for updating RPMs in an OCP cluster until
 https://github.com/openshift/enhancements/blob/master/enhancements/ocp-coreos-layering.md
 finalizes.
 
-Setup:
+Quay.io setup:
 
-1. If you do not already have a quay.io account, create one
-2. On quay.io, create a new repo named "overrides"
-3. Check out the sidedoor repo
-4. `echo REPO=quay.io/${QUAY_USERNAME}/overrides > config.sh`
+1. If you do not already have a quay.io account, create one by logging
+   into quay.io using the "Sign in with Red Hat" option to use SSO,
+   and then filling out the rest of the account information (including
+   selecting a quay.io username).
+
+2. After creating the account (or if you already have an account but
+   don't have a non-SSO password), click your username in the top
+   right then click "Account Settings" in the menu, and then click
+   "Change Password" near the bottom. Create a new password for this
+   account which will only be used for docker/podman. (There's not
+   really any need to follow this up with the "Generate Encrypted
+   Password" option, because if your account is linked to RH SSO, then
+   the password you set here can't be used to log in to the web site
+   anyway, so it doesn't matter that it can be extracted in plaintext
+   from your docker/podman config.)
+
+3. Click "+ Create New Repository" and create a repository called
+   "overrides". (With the options "Public" and "(Empty repository)".)
+
+
+Local (development machine) setup:
+
+1. Check out the sidedoor repo
+
+2. In the checkout directory, create a `config.sh` with a variable
+   pointing to your quay.io "overrides" repo:
+
+       echo REPO=quay.io/${QUAY_USERNAME}/overrides > config.sh
+
+3. Cache your password with podman:
+
+       podman login quay.io
 
 
 To build an override package:
