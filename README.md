@@ -46,8 +46,10 @@ To build an override package:
    It should also be limited to alphanumeric characters. A bugzilla
    bug or support case number works.
 
-2. Copy RPMs into the subdir. (All RPMs in the subdir will be copied
-   into the image.)
+2. Create subdirs "replace" and "new" of that directory and copy RPMs
+   into the appropriate subdir. (RPMs that are replacements for RPMs
+   already in the OCP image go into "replace/", while new RPMs go into
+   "new/".)
 
 3. Run `./build.sh ${NAME}` where `${NAME}` is the subdirectory name.
    This will build a container image containing the RPMs and an

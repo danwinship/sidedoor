@@ -24,9 +24,10 @@ name=$1
 cp do-overrides.sh ${name}/
 cat > ${name}/Dockerfile <<EOF
 FROM registry.access.redhat.com/ubi8/ubi-minimal
-RUN mkdir /rpms
+RUN mkdir /rpms /rpms/replace /rpms/new
 COPY do-overrides.sh /
-COPY *.rpm /rpms/
+COPY replace/*.rpm /rpms/replace
+COPY new/*.rpm /rpms/new
 
 LABEL io.k8s.display-name="overrides (${name})" \
       io.k8s.description="This installs or removes a set of RPM overrides."
