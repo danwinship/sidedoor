@@ -10,11 +10,13 @@ set -e
 
 function usage() {
     exec 1>&2
-    echo "Usage: $0 <install|uninstall> [--workers-only] OVERRIDE-IMAGE"
+    echo "Usage: $0 <install|uninstall> [--workers-only] [--no-reboot] OVERRIDE-IMAGE"
     echo ""
     echo "This will install or uninstall the overrides from OVERRIDE-IMAGE."
     echo ""
     echo "If --workers-only is passed, then the master nodes will not be touched."
+    echo "If --no-reboot is passed, the machines will not be rebooted (and thus"
+    echo "the installation will not be complete)."
 }
 
 while [ -n "$*" ]; do
@@ -29,6 +31,11 @@ while [ -n "$*" ]; do
             # "workers-only" really means "not masters". (eg, it includes infra nodes)
             node_affinity="affinity: { nodeAffinity: { requiredDuringSchedulingIgnoredDuringExecution: { nodeSelectorTerms: [ { matchExpressions: [ { key: node-role.kubernetes.io/master, operator: DoesNotExist } ] } ] } } }"
             node_filter="-l node-role.kubernetes.io/master!="
+            shift
+            ;;
+
+        --no-reboot)
+            no_reboot=true
             shift
             ;;
 
@@ -226,11 +233,14 @@ EOF
     done
 }
 
-
-# Install dummy MachineConfig(s) to force reboots.
-reboot_nodes worker
-if [ "${workers_only}" != "true" ]; then
-    reboot_nodes master
+if [ "{no_reboot}" = "true" ]; then
+    echo "(Skipping reboot)"
+else
+    # Install dummy MachineConfig(s) to force reboots.
+    reboot_nodes worker
+    if [ "${workers_only}" != "true" ]; then
+        reboot_nodes master
+    fi
 fi
 
 echo ""
